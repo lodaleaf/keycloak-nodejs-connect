@@ -349,6 +349,16 @@ test('GrantManager should be able to remove expired access_token token and keep 
     .then(t.end);
 });
 
+test('GrantManager should not raise error when token is offline', (t) => {
+  manager.obtainDirectly('test-user', 'tiger')
+    .then((grant) => {
+      grant.access_token.content.exp = 0;
+      grant.access_token.content.type = 'Offline';
+      return manager.validateGrant(grant);
+    })
+    .then(t.end);
+});
+
 test('GrantManager should return empty when trying to obtain from code with empty params', (t) => {
   manager.obtainFromCode('', '', '', '', function () {})
     .then((result) => {

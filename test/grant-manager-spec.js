@@ -352,9 +352,12 @@ test('GrantManager should be able to remove expired access_token token and keep 
 test('GrantManager should not raise error when token is offline', (t) => {
   manager.obtainDirectly('test-user', 'tiger')
     .then((grant) => {
-      grant.access_token.content.exp = 0;
-      grant.access_token.content.type = 'Offline';
+      grant.refresh_token.content.exp = 0;
+      grant.refresh_token.content.typ = 'Offline';
       return manager.validateGrant(grant);
+    })
+    .then((result) => {
+      t.notEqual(result, undefined);
     })
     .then(t.end);
 });
